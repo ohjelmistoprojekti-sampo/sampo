@@ -13,6 +13,6 @@ Application helps users to evaluate price for products they are looking to sell.
 - **Back-end** Express.js with TypeScript
 - **Front-end** Static HTML, TypeScript, CSS
 - **Other** Python for web scraping
-- ***AI** Coming soon...
+- **AI** Coming soon...
 - **Server** Cheapest server found on google search
 
