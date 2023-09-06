@@ -10,9 +10,9 @@ Application helps users to evaluate price for products they are looking to sell.
 
 ## Technologies
 
-*Back-end* Express.js with TypeScript
-*Front-end* Static HTML, TypeScript, CSS
-*Other* Python for web scraping
-*AI* Coming soon...
-*Server* Cheapest server found on google search
+- **Back-end** Express.js with TypeScript
+- **Front-end** Static HTML, TypeScript, CSS
+- **Other** Python for web scraping
+- ***AI** Coming soon...
+- **Server** Cheapest server found on google search
 
