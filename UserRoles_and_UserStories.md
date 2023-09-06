@@ -1,6 +1,6 @@
 # UserRoles
 1. **User**
-- Application user that provides the product information on the page pased on an AI query.
+- Application user that provides the product information on the page based on an AI query.
 - The user gets a price estimate for the product on the page.
 
 # UserStories
