@@ -13,6 +13,14 @@ app.get('/', (req: Request, res: Response) => {
   res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
 });
 
+app.get('/questions', (req: Request, res: Response) => {
+  const param = req.query.param;
+
+  res.send('hevonen');
+
+  console.log(param);
+})
+
 app.post('/submit-description', (req: Request, res: Response) => {
   const itemDescription: string = req.body.itemDescription;
 

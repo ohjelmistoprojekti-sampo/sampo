@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sampo</title>
 </head>
+
 <body>
     <h1>Sampo</h1>
     <p>
@@ -12,10 +14,39 @@
         Kirjoita tekstilaatikkoon mitä olet myymässä, esim. tuotteen merkki ja malli.
     </p>
 
-    <form method="POST" action="/submit-description">
-        <label for="itemDescription">Mitä haluaisit myydä?</label>
-        <input type="text" id="itemDescription" name="itemDescription" maxlength="30" required>
-        <button type="submit">Aloita</button>
-    </form>
+    <label for="itemDescription">Mitä haluaisit myydä?</label>
+    <input type="text" id="itemDescription" name="itemDescription" maxlength="30" required>
+    <button id="submit" type="submit">Aloita</button>
+
+
+    <script>
+        let questions = [];
+        
+        
+        const getQuestions = () => {
+            const param = document.getElementById('itemDescription').value;
+            fetch(`questions?param=${param}`)
+            .then(res => {
+                if (res.ok) {
+                    return res.json();
+                } else {
+                    throw new Error();
+                }
+            }).then(data => {
+                questions = data;
+                createForm(data);
+                })
+
+            }
+            
+            document.getElementById("submit").addEventListener('click', getQuestions)
+            
+        function createForm() {
+            console.log(data);
+
+        }
+
+    </script>
 </body>
+
 </html>
