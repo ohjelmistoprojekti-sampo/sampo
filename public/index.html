@@ -17,33 +17,63 @@
     <label for="itemDescription">Mitä haluaisit myydä?</label>
     <input type="text" id="itemDescription" name="itemDescription" maxlength="30" required>
     <button id="submit" type="submit">Aloita</button>
+    <div id="formContainer"></div>
 
 
     <script>
-        let questions = [];
-        
-        
+
         const getQuestions = () => {
             const param = document.getElementById('itemDescription').value;
             fetch(`questions?param=${param}`)
-            .then(res => {
-                if (res.ok) {
-                    return res.json();
-                } else {
-                    throw new Error();
-                }
-            }).then(data => {
-                questions = data;
-                createForm(data);
+                .then(res => {
+                    if (res.ok) {
+                        return res.json();
+                    } else {
+                        throw new Error();
+                    }
+                }).then(data => {
+                    createForm(data);
                 })
+                .catch(e => console.log(e));
 
-            }
-            
-            document.getElementById("submit").addEventListener('click', getQuestions)
-            
-        function createForm() {
-            console.log(data);
+        }
 
+        document.getElementById("submit").addEventListener('click', getQuestions)
+
+        function createForm(data) {
+            const form = document.createElement('form');
+
+            data.forEach(item => {
+                const label = document.createElement('label');
+                label.textContent = item.question;
+
+                const input = document.createElement('input');
+                input.setAttribute('type', 'text');
+                input.setAttribute('name', item.question);
+                input.setAttribute('placeholder', 'Answer');
+
+                const lineBreak = document.createElement('br');
+
+                form.appendChild(label);
+                form.appendChild(input);
+                form.appendChild(lineBreak);
+            });
+
+            const submitButton = document.createElement('button');
+            submitButton.setAttribute('type', 'button');
+            submitButton.textContent = 'Lähetä';
+
+            submitButton.addEventListener('click', () => {
+
+                // TODO: handle form submission with fetch request
+
+            });
+
+            form.appendChild(submitButton);
+
+            const formContainer = document.getElementById('formContainer');
+            formContainer.innerHTML = '';
+            formContainer.appendChild(form);
         }
 
     </script>

@@ -15,10 +15,9 @@ app.get('/', (req: Request, res: Response) => {
 
 app.get('/questions', (req: Request, res: Response) => {
   const param = req.query.param;
+  let questions: {}[] = [{question: 'Tuotteen merkki ja malli?', answer: ''}, {question: 'Tuotteen kunto', answer: ''}];
 
-  res.send('hevonen');
-
-  console.log(param);
+  res.send(questions);
 })
 
 app.post('/submit-description', (req: Request, res: Response) => {
