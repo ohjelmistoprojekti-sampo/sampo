@@ -1,13 +1,18 @@
-import mechanicalsoup
 
+from bs4 import BeautifulSoup
+   
+    
 if __name__ == "__main__":
-    
-    browser = mechanicalsoup.Browser()
-    url = "https://www.huuto.net/"
-    page = browser.get(url)
-    page_html = page.soup
-    
-    form = page_html.select("input")[0]
-    form.select("input")[0] = "tuoli"
-    
-    search_page = browser.submit(form, page_html.url)
+    URL_INPUT= 'https://www.huuto.net/'
+    bs=BeautifulSoup(show_html(URL_INPUT),'html.parse')
+    search = bs.find_all('input')
+    for result in search: 
+        print(result, '\n')
+        input_value=result.get('value')
+        print(input_value, '\n')
+
+
+
+
+
+
