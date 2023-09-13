@@ -5,7 +5,11 @@ from bs4 import BeautifulSoup
 
 if __name__ == "__main__":
     
-    URL = "https://www.huuto.net/haku?words=aaltomaljakko&area="
+    # Take user input for the search term
+    search_term = input("Tuottee nimi: ")
+
+    # Construct the URL with the user's input
+    URL = f"https://www.huuto.net/haku?words={search_term}&area="
 
     page = requests.get(URL)
 
