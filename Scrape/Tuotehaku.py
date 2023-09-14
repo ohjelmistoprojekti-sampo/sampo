@@ -9,7 +9,7 @@ if __name__ == "__main__":
     search_term = input("Tuottee nimi: ")
 
     # Construct the URL with the user's input
-    URL = f"https://www.huuto.net/haku?words={search_term}&area="
+    URL = f"https://www.huuto.net/haku/words/{search_term}"
 
     page = requests.get(URL)
 
@@ -18,7 +18,7 @@ if __name__ == "__main__":
 
     results = soup.find(id="search-container")
 
-   
+   # lists for the attributes
     hinta_lista = []
     nimi_lista = []
     kunto_lista = []
