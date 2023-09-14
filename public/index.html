@@ -18,6 +18,7 @@
     <input type="text" id="itemDescription" name="itemDescription" maxlength="30" required>
     <button id="submit" type="submit">Aloita</button>
     <div id="formContainer"></div>
+    <div id="resultContainer"></div>
 
 
     <script>
@@ -40,8 +41,9 @@
 
         document.getElementById("submit").addEventListener('click', getQuestions)
 
-        function createForm(data) {
+        const createForm = (data) => {
             const form = document.createElement('form');
+            const userInput = {};
 
             data.forEach(item => {
                 const label = document.createElement('label');
@@ -51,6 +53,11 @@
                 input.setAttribute('type', 'text');
                 input.setAttribute('name', item.question);
                 input.setAttribute('placeholder', 'Answer');
+
+                input.addEventListener('input', (e) => {
+                    userInput[item.question] = e.target.value;
+                    console.log(JSON.stringify(userInput));
+                });
 
                 const lineBreak = document.createElement('br');
 
@@ -63,17 +70,29 @@
             submitButton.setAttribute('type', 'button');
             submitButton.textContent = 'Lähetä';
 
-            submitButton.addEventListener('click', () => {
-
-                // TODO: handle form submission with fetch request
-
-            });
+            submitButton.addEventListener('click', () => handleFormSubmit(userInput));
 
             form.appendChild(submitButton);
 
             const formContainer = document.getElementById('formContainer');
             formContainer.innerHTML = '';
             formContainer.appendChild(form);
+        }
+
+        const handleFormSubmit = (formData) => {
+            fetch('submit-form', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            })
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById('resultContainer').innerHTML = html;
+                })
+                .catch(e => {
+                    console.error('Error:', e);
+                });
+
         }
 
     </script>
