@@ -16,29 +16,24 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 app.get('/questions', (req: Request, res: Response) => {
-  const param = req.query.param;
-  let questions: {}[] = [{ question: 'Question1', answer: '' }, { question: 'Question2', answer: '' }];
+  const itemDescription = req.query.param;
+  console.log(itemDescription);
+  let questions: {}[] = [
+  { question: 'Missä kunnossa tuote on?', answer: '' }, 
+  { question: 'Kuinka vanha tuote on?', answer: '' },
+  { question: 'Minkä värinen tuote on?', answer: '' }
+];
 
   res.send(questions);
 })
 
-app.post('/submit-description', (req: Request, res: Response) => {
-  const itemDescription: string = req.body.itemDescription;
-
-  /* Placeholder response to send itemDescription.
-   Change to redirect when the estimation form is done. */
-  res.send(itemDescription);
-});
-
 app.post('/submit-form', (req: Request, res: Response) => {
   const formData = req.body;
-  console.log(req.body);
-  const result = `
-  <div><h3>Vaihtoehto 1: Halpa ja nopea</h3><p>10 euroa</p></div>
-  <div><h3>Vaihtoehto 2: Keskihinta (suositeltu) </h3><p>30 euroa</p></div>  
-  <div><h3>Vaihtoehto 3: Kallis ja hidas</h3><p>50 euroa</p></div>`;
+  console.log(formData);
   
-  res.send(result);
+  const prices: number[] = [10, 20, 30]
+  
+  res.send(prices);
 })
 
 app.listen(port, () => {
