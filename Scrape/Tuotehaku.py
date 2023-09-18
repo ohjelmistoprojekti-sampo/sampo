@@ -47,5 +47,5 @@ for pair in pairs:
     print("Kunto", pair[2])
     print()
 
-
+print("")
     
