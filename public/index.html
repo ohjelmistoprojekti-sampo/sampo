@@ -14,17 +14,21 @@
         Kirjoita tekstilaatikkoon mitä olet myymässä, esim. tuotteen merkki ja malli.
     </p>
 
-    <label for="itemDescription">Mitä haluaisit myydä?</label>
-    <input type="text" id="itemDescription" name="itemDescription" maxlength="30">
-    <button id="submit" type="submit">Aloita</button>
+    <form id="itemDescriptionForm">
+        <label for="itemDescription">Mitä haluaisit myydä?</label>
+        <input type="text" id="itemDescription" name="itemDescription" maxlength="30" required>
+        <button type="submit">Aloita</button>
+    </form>
+    
     <div id="formContainer"></div>
+    
     <div id="resultContainer"></div>
 
-
     <script>
-
+        // submit item description to backend and get follow up questions
         const getQuestions = () => {
             const param = document.getElementById('itemDescription').value;
+
             fetch(`questions?param=${param}`)
                 .then(res => {
                     if (res.ok) {
@@ -36,15 +40,20 @@
                     createForm(data);
                 })
                 .catch(e => console.log(e));
-
         }
 
-        document.getElementById("submit").addEventListener('click', getQuestions)
+        // prevent default form submit and call getQuestions() instead
+        document.getElementById("itemDescriptionForm").addEventListener('submit', function (e) {
+            e.preventDefault();
+            getQuestions();
+        });
 
+        // create a follow up question form
         const createForm = (data) => {
             const form = document.createElement('form');
             const userInput = {};
 
+            // create follow up question labels and inputs
             data.forEach(item => {
                 const label = document.createElement('label');
                 label.textContent = item.question;
@@ -52,11 +61,11 @@
                 const input = document.createElement('input');
                 input.setAttribute('type', 'text');
                 input.setAttribute('name', item.question);
-                input.setAttribute('placeholder', 'Answer');
+                input.setAttribute('required', 'true');
+                input.setAttribute('maxlength', '30');
 
                 input.addEventListener('input', (e) => {
                     userInput[item.question] = e.target.value;
-                    console.log(JSON.stringify(userInput));
                 });
 
                 const lineBreak = document.createElement('br');
@@ -66,19 +75,27 @@
                 form.appendChild(lineBreak);
             });
 
+            // create the submit button
             const submitButton = document.createElement('button');
-            submitButton.setAttribute('type', 'button');
+            submitButton.setAttribute('type', 'submit');
             submitButton.textContent = 'Lähetä';
-
-            submitButton.addEventListener('click', () => handleFormSubmit(userInput));
 
             form.appendChild(submitButton);
 
+            // put the new follow up question form into formContainer
             const formContainer = document.getElementById('formContainer');
             formContainer.innerHTML = '';
             formContainer.appendChild(form);
+       
+            // prevent default submit and call handleFormSubmit instead
+            document.getElementById("formContainer").addEventListener('submit', function (e) {
+                e.preventDefault();
+                handleFormSubmit(userInput);
+            });
         }
 
+
+        // submit follow up question form and show returned prices
         const handleFormSubmit = (formData) => {
             fetch('submit-form', {
                 method: 'POST',
@@ -87,7 +104,6 @@
             })
                 .then(response => response.json())
                 .then(data => {
-                    console.log(data);
                     const html = `
                         <p>Price 1: ${data[0]}</p>
                         <p>Price 2: ${data[1]}</p>
@@ -99,9 +115,7 @@
                 .catch(e => {
                     console.error('Error:', e);
                 });
-
         }
-
     </script>
 </body>
 
