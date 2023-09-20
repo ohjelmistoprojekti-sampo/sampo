@@ -20,7 +20,7 @@ if __name__ == "__main__":
     kunto_lista = []
 
     job_elements = results.find_all("div", class_="item-card__title")
-    hinta = results.find_all("div", class_="item-card__price item-card__price--buynow")
+    hinta = results.find_all("div", class_="item-card__price")
     nimi = results.find_all("div", class_="item-card__title")
     kunto = results.find_all("div", class_="item-card__condition")
     
