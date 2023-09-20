@@ -1,19 +1,18 @@
-import express, { Request, Response } from 'express';
+import express, { Express, Request, Response } from 'express';
 import bodyParser from 'body-parser';
-import path from 'path';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 
-const app = express();
+const app: Express = express();
 
 const port = 3000;
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
-
-app.use(express.static(path.join(__dirname, 'views')));
-
-app.get('/', (req: Request, res: Response) => {
-  res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
-});
+app.use('/', express.static('public'))
 
 app.get('/questions', (req: Request, res: Response) => {
   const itemDescription = req.query.param;
