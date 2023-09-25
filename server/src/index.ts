@@ -1,7 +1,8 @@
 import express, { Express, Request, Response } from 'express';
 import bodyParser from 'body-parser';
 import { fileURLToPath } from 'url';
-import path, { dirname } from 'path';
+import { dirname } from 'path';
+
 const app: Express = express();
 
 const port = 3000;
@@ -11,17 +12,16 @@ const __dirname = dirname(__filename);
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
-app.use('/', express.static(path.join(__dirname, '..', 'client', 'public')))
-app.use('/dist', express.static(path.join(__dirname, '..', 'client', 'public')));
+app.use('/', express.static('client/public'))
 
 app.get('/questions', (req: Request, res: Response) => {
   const itemDescription = req.query.param;
   console.log(itemDescription);
   let questions: {}[] = [
-    { question: 'Missä kunnossa tuote on?', answer: '' },
-    { question: 'Kuinka vanha tuote on?', answer: '' },
-    { question: 'Minkä värinen tuote on?', answer: '' }
-  ];
+  { question: 'Missä kunnossa tuote on?', answer: '' }, 
+  { question: 'Kuinka vanha tuote on?', answer: '' },
+  { question: 'Minkä värinen tuote on?', answer: '' }
+];
 
   res.send(questions);
 })
@@ -29,9 +29,9 @@ app.get('/questions', (req: Request, res: Response) => {
 app.post('/submit-form', (req: Request, res: Response) => {
   const formData = req.body;
   console.log(formData);
-
+  
   const prices: number[] = [10, 20, 30]
-
+  
   res.send(prices);
 })
 

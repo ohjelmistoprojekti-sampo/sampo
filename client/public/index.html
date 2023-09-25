@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sampo</title>
+</head>
+
+<body>
+    <h1>Sampo</h1>
+    <p>
+        Oletko myymässä käytettyä tavaraa? Sampo kertoo sinulle parhaan hinnan!
+        Kirjoita tekstilaatikkoon mitä olet myymässä, esim. tuotteen merkki ja malli.
+    </p>
+
+    <form id="itemDescriptionForm">
+        <label for="itemDescription">Mitä haluaisit myydä?</label>
+        <input type="text" id="itemDescription" name="itemDescription" maxlength="30" required>
+        <button type="submit">Aloita</button>
+    </form>
+    
+    <div id="formContainer"></div>
+    
+    <div id="resultContainer"></div>
+
+</body>
+<script src="script.js"></script>
+</html>
