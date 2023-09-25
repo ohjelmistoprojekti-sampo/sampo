@@ -6,7 +6,6 @@ import re
 
 def kunto(linkki):
     url = linkki
-    print(linkki)
 
     page = requests.get(url)
     soup = BeautifulSoup(page.content, 'html.parser')
@@ -19,7 +18,6 @@ def kunto(linkki):
         value_elem = topic_elem.find_next('td', class_='value')
         if value_elem:
             kunto_value = value_elem.get_text().strip()
-    print(kunto_value)
 
     return(kunto_value)
     
@@ -54,9 +52,10 @@ if __name__ == "__main__":
         hinta_str = hinta_elem.get_text().replace(" ", "").replace("\n", "")
         nimi_str = nimi_elem.get_text().strip()
         linkki_str = linkki_elem.strip()
-        print(linkki_str)
+        cleaned_linkki_str = linkki_str.replace('&amp;', '&')
+       
 
-        kuntoS=kunto(linkki_str)
+        kuntoS=kunto(cleaned_linkki_str)
 
         item_data = {
                 "Nimi": nimi_str,
