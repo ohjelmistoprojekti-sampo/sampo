@@ -16,3 +16,15 @@ Application helps users to evaluate price for products they are looking to sell.
 - **AI** Coming soon...
 - **Server** Cheapest server found on google search
 
+
+## Python script run instructions
+1. Clone the scrape branch.
+  
+2. Run the python script
+  > $ python /scrape/Tuotehaku.py
+
+  > $ python /scrape/Torihaku.py
+
+3. Type in the product that you want to search.
+
+4. Review the results
