@@ -4,26 +4,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <!-- font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
     <title>Sampo</title>
 </head>
 
 <body>
-    <h1>Sampo</h1>
-    <p>
-        Oletko myymässä käytettyä tavaraa? Sampo kertoo sinulle parhaan hinnan!
-        Kirjoita tekstilaatikkoon mitä olet myymässä, esim. tuotteen merkki ja malli.
-    </p>
 
-    <form id="itemDescriptionForm">
-        <label for="itemDescription">Mitä haluaisit myydä?</label>
-        <input type="text" id="itemDescription" name="itemDescription" maxlength="30" required>
-        <button type="submit">Aloita</button>
-    </form>
+    <div id="landing-container" class="section">
+        <h1>Sampo</h1>
+        <p>
+            Oletko myymässä käytettyä tavaraa? Sampo kertoo sinulle parhaan hinnan!
+            Kirjoita tekstilaatikkoon mitä olet myymässä, esim. tuotteen merkki ja malli.
+        </p>
+
+        <form id="item-description-form">
+            <label for="item-description">Mitä haluaisit myydä?</label>
+            <input type="text" id="item-description" name="item-description" maxlength="30" required>
+            <button type="submit">Aloita</button>
+        </form>
+    </div>
+
+    <div id="form-container" class="section"></div>
+
+    <div id="result-container" class="section" style="display: none;">
+        <div id="price-card-container">
+            <div class="price-card" id="fast-sell-card">
+                <div class="price-card-heading">
+                    Nopea myynti <span id="fast-sell-price" class="price"></span>
+                </div>
+                <div class="price-card-text">
+                    Haluat saada myytyä tuotteen nopeasti, mutta kuitenkin järkevään hintaan.
+                </div>
+            </div>
     
-    <div id="formContainer"></div>
+            <div class="price-card" id="optimum-price-card">
+                <div class="price-card-heading">
+                    Suositus <span id="optimum-price" class="price"></span>
+                </div>
+                <div class="price-card-text">
+                    Saat tuotteestasi hyvän hinnan ja tuote menee kohtuullisessa ajassa kaupaksi.
+                </div>
+            </div>
     
-    <div id="resultContainer"></div>
+            <div class="price-card" id="highest-price-card">
+                <div class="price-card-heading">
+                    Korkein hinta <span id="highest-price" class="price"></span>
+                </div>
+                <div class="price-card-text">
+                    Myyntiaika on pitkä, mutta jos haluat korkeimman mahdollisen hinnan tuotteestasi, valitse tämä.
+                </div>
+            </div>
+        </div>
+
+    </div>
 
 </body>
 <script src="script.js"></script>
+
 </html>

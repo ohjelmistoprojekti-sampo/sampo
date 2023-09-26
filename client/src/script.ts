@@ -1,6 +1,6 @@
-// submit item description to backend and get follow up questions
+// Submit item description to the backend and get follow-up questions
 const getQuestions = () => {
-    const param: string | null = (document.getElementById('itemDescription') as HTMLInputElement)?.value;
+    const param: string | null = (document.getElementById('item-description') as HTMLInputElement)?.value;
     fetch(`questions?param=${param}`)
         .then(res => {
             if (res.ok) {
@@ -14,8 +14,8 @@ const getQuestions = () => {
         .catch(e => console.log(e));
 }
 
-// prevent default form submit and call getQuestions() instead
-const itemDescriptionForm = document.getElementById("itemDescriptionForm");
+// Prevent default form submit and call getQuestions() instead
+const itemDescriptionForm = document.getElementById("item-description-form");
 
 if (itemDescriptionForm) {
     itemDescriptionForm.addEventListener('submit', function (e) {
@@ -24,12 +24,12 @@ if (itemDescriptionForm) {
     });
 }
 
-// create a follow up question form
+// Create a follow-up question form
 const createForm = (data: Array<{ question: string }>) => {
     let form = document.createElement('form');
     const userInput: { [key: string]: string } = {};
 
-    // create follow up question labels and inputs
+    // Create follow-up question labels and inputs
     data.forEach(item => {
         const label = document.createElement('label');
         label.textContent = item.question;
@@ -54,19 +54,20 @@ const createForm = (data: Array<{ question: string }>) => {
         form.appendChild(lineBreak);
     });
 
-    // create the submit button
+    // Create the submit button
     const submitButton = document.createElement('button');
     submitButton.setAttribute('type', 'submit');
     submitButton.textContent = 'Lähetä';
 
     form.appendChild(submitButton);
 
-    // put the new follow up question form into formContainer
-    const formContainer = document.getElementById('formContainer') as HTMLElement;
+    // Put the new follow-up question form into form-container
+    const formContainer = document.getElementById('form-container') as HTMLElement;
     formContainer.innerHTML = '';
     formContainer.appendChild(form);
+    formContainer.scrollIntoView({ behavior: 'smooth' });
 
-    // prevent default submit and call handleFormSubmit instead
+    // Prevent default submit and call handleFormSubmit instead
     formContainer.addEventListener('submit', function (e) {
         e.preventDefault();
         handleFormSubmit(userInput);
@@ -74,8 +75,7 @@ const createForm = (data: Array<{ question: string }>) => {
     return form;
 }
 
-
-// submit follow up question form and show returned prices
+// Submit follow-up question form and show returned prices
 const handleFormSubmit = (formData: {}) => {
     fetch('submit-form', {
         method: 'POST',
@@ -84,15 +84,14 @@ const handleFormSubmit = (formData: {}) => {
     })
         .then(response => response.json())
         .then(data => {
-            const html = `
-                <p>Price 1: ${data[0]}</p>
-                <p>Price 2: ${data[1]}</p>
-                <p>Price 3: ${data[2]}</p>
-            `;
+            document.getElementById("fast-sell-price")!.textContent = `${data[0]} €`;
+            document.getElementById("optimum-price")!.textContent = `${data[1]} €`;
+            document.getElementById("highest-price")!.textContent = `${data[2]} €`;
 
-            const resultContainer = document.getElementById('resultContainer')
+            const resultContainer = document.getElementById('result-container')
             if (resultContainer) {
-                resultContainer.innerHTML = html;
+                resultContainer.style.display = "flex";
+                resultContainer.scrollIntoView({ behavior: "smooth" });
             }
         })
         .catch(e => {
