@@ -17,7 +17,7 @@
     "prestart": "npm run build",
     "start": "node server/dist/index.js",
     "preserve": "npm run build",
-    "serve": "npx tsc -w -p server/tsconfig.json & npx nodemon server/dist/index.js"
+    "serve": "npx tsc -w -p server/tsconfig.json & npx tsc -w -p client/tsconfig.json & npx nodemon server/dist/index.js"
   },
   "author": "",
   "license": "ISC",
