@@ -1,2 +1,4 @@
 node_modules/
 dist/
+client/public/*.js
+client/public/*.js.map
