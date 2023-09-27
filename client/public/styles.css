@@ -3,16 +3,18 @@ body, html {
     padding: 0;
     height: 100%;
     font-family: 'Open Sans', sans-serif;
+    background-color: #f8f8f8; /* Same background color as form for consistency */
 }
 
 /* Form Styles */
 form {
-    background-color: #f8f8f8; /* A light background color for the form */
     padding: 20px; /* Consistent padding */
     border-radius: 5%; /* Consistent border-radius */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Same box shadow as price card */
     width: 80%; /* Control the width of the form */
     text-align: center; /* Center the text */
+    background-color: #fff;
+    max-width: 500px;
 }
 
 label, input, button {
@@ -27,20 +29,11 @@ button {
     border: none; /* Remove border from the button */
     border-radius: 5px; /* Rounded corners on the button */
     cursor: pointer; /* Change cursor to pointer on hover */
+    max-width: 100px;
 }
 
 button:hover {
     background-color: #45a049; /* A darker green on hover */
-}
-
-/* Landing Container Styles */
-#landing-container {
-    background-color: #f1f1f1; /* A different light background color for contrast */
-}
-
-/* Form Container Styles */
-#form-container {
-    background-color: #f8f8f8; /* Same background color as form for consistency */
 }
 
 /* Heading and Paragraph Styles */
@@ -57,6 +50,8 @@ p {
     font-size: 1em; /* Regular font size for paragraph */
     width: 80%; /* Control the width of the paragraph */
     margin: 0 auto; /* Center the paragraph */
+    margin-bottom: 30px;
+    max-width: 500px;
 }
 
 

@@ -65,7 +65,12 @@ const createForm = (data: Array<{ question: string }>) => {
     const formContainer = document.getElementById('form-container') as HTMLElement;
     formContainer.innerHTML = '';
     formContainer.appendChild(form);
-    formContainer.scrollIntoView({ behavior: 'smooth' });
+    formContainer.style.display = "flex"; // show the next section
+    formContainer.scrollIntoView({ behavior: 'smooth' }); // scroll into it
+    // wait for the scroll animation to finish then hide the first section
+    setTimeout(function(){
+        document.getElementById("landing-container")!.style.display = "none";
+    }, 510);
 
     // Prevent default submit and call handleFormSubmit instead
     formContainer.addEventListener('submit', function (e) {
@@ -92,6 +97,10 @@ const handleFormSubmit = (formData: {}) => {
             if (resultContainer) {
                 resultContainer.style.display = "flex";
                 resultContainer.scrollIntoView({ behavior: "smooth" });
+
+                setTimeout(function(){
+                    document.getElementById('form-container')!.style.display = "none";
+                }, 600);
             }
         })
         .catch(e => {
