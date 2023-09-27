@@ -5,6 +5,61 @@ body, html {
     font-family: 'Open Sans', sans-serif;
 }
 
+/* Form Styles */
+form {
+    background-color: #f8f8f8; /* A light background color for the form */
+    padding: 20px; /* Consistent padding */
+    border-radius: 5%; /* Consistent border-radius */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Same box shadow as price card */
+    width: 80%; /* Control the width of the form */
+    text-align: center; /* Center the text */
+}
+
+label, input, button {
+    width: 90%; /* Make label, input, and button take up most of the form width */
+    margin-bottom: 15px; /* Add some bottom margin for spacing */
+}
+
+button {
+    background-color: #4CAF50; /* A nice green color for the button */
+    color: white; /* White text on the button */
+    padding: 15px 20px; /* Some padding for the button */
+    border: none; /* Remove border from the button */
+    border-radius: 5px; /* Rounded corners on the button */
+    cursor: pointer; /* Change cursor to pointer on hover */
+}
+
+button:hover {
+    background-color: #45a049; /* A darker green on hover */
+}
+
+/* Landing Container Styles */
+#landing-container {
+    background-color: #f1f1f1; /* A different light background color for contrast */
+}
+
+/* Form Container Styles */
+#form-container {
+    background-color: #f8f8f8; /* Same background color as form for consistency */
+}
+
+/* Heading and Paragraph Styles */
+h1, p {
+    margin: 10px 0; /* Add some margin */
+    color: #333; /* Dark text color for contrast */
+}
+
+h1 {
+    font-size: 2em; /* Make the heading larger */
+}
+
+p {
+    font-size: 1em; /* Regular font size for paragraph */
+    width: 80%; /* Control the width of the paragraph */
+    margin: 0 auto; /* Center the paragraph */
+}
+
+
 .section {
     height: 100%;
     display: flex;
