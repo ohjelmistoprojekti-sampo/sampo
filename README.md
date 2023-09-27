@@ -22,36 +22,36 @@ Application helps users to evaluate price for products they are looking to sell.
 
 To run the application you need node version 18.
 
-1. Clone the Git-repository to your local machine: 
+Clone the Git-repository to your local machine: 
 
 `git clone https://github.com/ohjelmistoprojekti-sampo/sampo.git`
 
-2. Navigate to your project directory
+Navigate to your project directory
 
 `cd ohjelmistoprojekti-sampo`
 
-2. Install necessary dependencies with npm:
+Install necessary dependencies with npm:
 
 `npm install`
 
-3. Start the application:
+Start the application:
 
 `npm run serve`
 
-4. The app will start on port 3000 by default:
+The app will start on port 3000 by default:
 
 Navigate to localhost:3000 with your browser.
 
 ### Run webscraper
-1. Clone the project
+Clone the project
 
 `git clone https://github.com/ohjelmistoprojekti-sampo/sampo.git`
   
-2. Run the python script
+Run the python script
   > $ python /scrape/Tuotehaku.py
 
   > $ python /scrape/Torihaku.py
 
-3. Type in the product that you want to search.
+Type in the product that you want to search.
 
-4. Review the results
+Review the results
