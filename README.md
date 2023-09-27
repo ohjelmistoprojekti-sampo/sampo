@@ -46,6 +46,12 @@ Navigate to localhost:3000 with your browser.
 Clone the project
 
 `git clone https://github.com/ohjelmistoprojekti-sampo/sampo.git`
+
+Install necessary dependecies with pip:
+
+`pip install beautifulsoup4`
+
+`pip install requests`
   
 Run the python script
   > $ python /scrape/Tuotehaku.py
