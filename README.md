@@ -24,19 +24,27 @@ To run the application you need node version 18.
 
 Clone the Git-repository to your local machine: 
 
-`git clone https://github.com/ohjelmistoprojekti-sampo/sampo.git`
+```sh
+git clone https://github.com/ohjelmistoprojekti-sampo/sampo.git
+```
 
 Navigate to your project directory
 
-`cd ohjelmistoprojekti-sampo`
+```
+cd ohjelmistoprojekti-sampo
+```
 
 Install necessary dependencies with npm:
 
-`npm install`
+```
+npm install
+```
 
 Start the application:
 
-`npm run serve`
+```
+npm run serve
+```
 
 The app will start on port 3000 by default:
 
