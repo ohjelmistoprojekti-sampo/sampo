@@ -135,3 +135,29 @@ function closePopup() {
     closeUploadFormButton.removeEventListener("click", closePopup);
     document.removeEventListener("click", closePopupOutside);
 }
+
+const form = document.getElementById('upload-form') as HTMLFormElement;
+
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    const formData = new FormData(form);
+
+    try {
+      const response = await fetch('/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (response.ok) {
+        console.log('File uploaded successfully');
+        // You can handle the success here (e.g., show a success message).
+      } else {
+        console.error('File upload failed');
+        // You can handle the error here (e.g., show an error message).
+      }
+    } catch (error) {
+      console.error('An error occurred:', error);
+      // Handle other errors as needed.
+    }
+  });

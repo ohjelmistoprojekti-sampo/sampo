@@ -1,18 +1,30 @@
-import express, { Express, Request, Response } from 'express';
+import express, { Express, NextFunction, Request, Response } from 'express';
 import bodyParser from 'body-parser';
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
+import multer from 'multer';
 
 const app: Express = express();
-
 const port = 3000;
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+// path for uploaded image files
+const upload = multer({ dest: 'server/uploads/' });
 
+//handle file upload
+app.post('/upload', upload.single('photo'), (req: Request, res: Response) => {
+ // req.file
+})
+
+// middleware
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
+
+// route to index.html
 app.use('/', express.static('client/public'))
+
+app.post('/upload', )
+
+
+
+
 
 app.get('/questions', (req: Request, res: Response) => {
   const itemDescription = req.query.param;
