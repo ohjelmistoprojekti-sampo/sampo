@@ -26,6 +26,19 @@
             <input type="text" id="item-description" name="item-description" maxlength="30" required>
             <button type="submit">Aloita</button>
         </form>
+
+        <button id="open-upload-form-button">Lataa kuva</button>
+        <div id="popup" class="popup">
+            <div class="upload-form-container">
+                <span class="close" id="close-upload-form-button">&times;</span>
+                <form id="upload-form" encType="multipart/form-data">
+                    <label for="camera-input">Ota kuva:</label>
+                    <input type="file" id="photo-upload-input" accept="image/*" capture="environment" required>
+                    <button type="submit">Lataa</button>
+                </form>
+            </div>
+        </div>
+
     </div>
 
     <div id="form-container" class="section" style="display: none;"></div>
@@ -40,7 +53,7 @@
                     Haluat myydä tuotteen nopeasti, mutta kuitenkin järkevään hintaan.
                 </div>
             </div>
-    
+
             <div class="price-card" id="optimum-price-card">
                 <div class="price-card-heading">
                     Suositus <span id="optimum-price" class="price"></span>
@@ -49,7 +62,7 @@
                     Saat tuotteestasi hyvän hinnan ja tuote menee kaupaksi kohtuullisessa ajassa.
                 </div>
             </div>
-    
+
             <div class="price-card" id="highest-price-card">
                 <div class="price-card-heading">
                     Korkein hinta <span id="highest-price" class="price"></span>
@@ -59,7 +72,7 @@
                 </div>
             </div>
         </div>
-    <a href="/">Tee uusi hinta arvio</a>
+        <a href="/">Tee uusi hinta arvio</a>
     </div>
 
 </body>

@@ -107,3 +107,31 @@ const handleFormSubmit = (formData: {}) => {
             console.error('Error:', e);
         });
 }
+
+const openUploadFormButton = document.getElementById('open-upload-form-button') as HTMLElement;
+const closeUploadFormButton = document.getElementById('close-upload-form-button') as HTMLElement;
+const popup = document.getElementById("popup") as HTMLElement;
+
+openUploadFormButton.addEventListener("click", () => {
+    popup.style.display = "block";
+
+    // Add an event listener to the close button
+    closeUploadFormButton.addEventListener("click", closePopup);
+
+    // Add an event listener to close the popup when clicking outside
+    document.addEventListener("click", closePopupOutside);
+});
+
+function closePopupOutside(event: Event) {
+    if (event.target === popup) {
+        closePopup();
+    }
+}
+
+function closePopup() {
+    popup.style.display = "none";
+
+    // Remove the event listeners when the popup is closed
+    closeUploadFormButton.removeEventListener("click", closePopup);
+    document.removeEventListener("click", closePopupOutside);
+}
