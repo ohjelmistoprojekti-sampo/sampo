@@ -27,19 +27,25 @@
             <button type="submit">Aloita</button>
         </form>
 
-        <button id="open-upload-form-button">Lataa kuva</button>
-        <div id="popup" class="popup">
-            <div class="upload-form-container">
-                <span class="close" id="close-upload-form-button">&times;</span>
-                <form id="upload-form" encType="multipart/form-data" action="/upload" method="POST">
-                    <label for="camera-input">Ota kuva:</label>
-                    <input type="file" id="photo-upload-input" name="photo" accept="image/*" capture="environment" required>
-                    <button type="submit">Lataa</button>
-                </form>
+        <div id="upload-container">
+            <p>
+                Jos et tiedä tuotteesi merkkiä tai mallia, voit ladata siitä kuvan:
+            </p>
+            
+            <button id="open-upload-form-button">Lataa kuva</button>
+            <div id="popup" class="popup">
+                <div class="upload-form-container">
+                    <span class="close" id="close-upload-form-button">&times;</span>
+                    <form id="upload-form" encType="multipart/form-data" action="/upload" method="POST">
+                        <label for="camera-input">Ota kuva:</label>
+                        <input type="file" id="photo-upload-input" name="photo" accept="image/*" capture="environment" required>
+                        <button type="submit">Lataa</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-
+    
     <div id="form-container" class="section" style="display: none;"></div>
 
     <div id="result-container" class="section" style="display: none;">
