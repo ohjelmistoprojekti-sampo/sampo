@@ -1,111 +1,149 @@
-// Submit item description to the backend and get follow-up questions
-const getQuestions = () => {
-    const param: string | null = (document.getElementById('item-description') as HTMLInputElement)?.value;
-    fetch(`questions?param=${param}`)
-        .then(res => {
-            if (res.ok) {
-                return res.json();
-            } else {
-                throw new Error();
+let userSelections = {
+    picture: null as string | null,
+    condition: null as string | null
+};
+
+
+const moveToPictureSelection = async () => {
+    // Capture the item description input and send to server
+    const itemDescriptionInput = document.getElementById("item-description") as HTMLInputElement;
+    if (itemDescriptionInput) {
+        const description = itemDescriptionInput.value;
+        await sendItemDescriptionToServer(description);
+    }
+    
+    const pictureContainer = document.getElementById("picture-container");
+    const landingContainer = document.getElementById("landing-container");
+
+    if (pictureContainer) {
+        pictureContainer.style.display = "flex";
+        pictureContainer.scrollIntoView({ behavior: 'smooth' });
+
+        setTimeout(() => {
+            if (landingContainer) {
+                landingContainer.style.display = "none";
             }
-        }).then(data => {
-            createForm(data);
-        })
-        .catch(e => console.log(e));
+        }, 510);
+    }
 }
 
-// Prevent default form submit and call getQuestions() instead
+const sendItemDescriptionToServer = async (description: string) => {
+    try {
+        const res = await fetch('submit-item-description', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ description })
+        });
+
+        if (!res.ok) throw new Error("Failed to send item description to server");
+
+    } catch (e) {
+        console.error('Error sending item description:', e);
+    }
+}
+
+// Prevent default form submit and call moveToPictureSelection() instead
 const itemDescriptionForm = document.getElementById("item-description-form");
 
 if (itemDescriptionForm) {
     itemDescriptionForm.addEventListener('submit', function (e) {
         e.preventDefault();
-        getQuestions();
+        moveToPictureSelection();
     });
 }
 
-// Create a follow-up question form
-const createForm = (data: Array<{ question: string }>) => {
-    let form = document.createElement('form');
-    const userInput: { [key: string]: string } = {};
-
-    // Create follow-up question labels and inputs
-    data.forEach(item => {
-        const label = document.createElement('label');
-        label.textContent = item.question;
-
-        const input = document.createElement('input');
-        input.setAttribute('type', 'text');
-        input.setAttribute('name', item.question);
-        input.setAttribute('required', 'true');
-        input.setAttribute('maxlength', '30');
-
-        input.addEventListener('input', (e) => {
-            const target = e.target as HTMLInputElement;
-            if (target.value !== null) {
-                userInput[item.question] = target.value;
-            }
-        });
-
-        const lineBreak = document.createElement('br');
-
-        form.appendChild(label);
-        form.appendChild(input);
-        form.appendChild(lineBreak);
-    });
-
-    // Create the submit button
-    const submitButton = document.createElement('button');
-    submitButton.setAttribute('type', 'submit');
-    submitButton.textContent = 'Lähetä';
-
-    form.appendChild(submitButton);
-
-    // Put the new follow-up question form into form-container
-    const formContainer = document.getElementById('form-container') as HTMLElement;
-    formContainer.innerHTML = '';
-    formContainer.appendChild(form);
-    formContainer.style.display = "flex"; // show the next section
-    formContainer.scrollIntoView({ behavior: 'smooth' }); // scroll into it
-    // wait for the scroll animation to finish then hide the first section
-    setTimeout(function(){
-        document.getElementById("landing-container")!.style.display = "none";
-    }, 510);
-
-    // Prevent default submit and call handleFormSubmit instead
-    formContainer.addEventListener('submit', function (e) {
-        e.preventDefault();
-        handleFormSubmit(userInput);
-    });
-    return form;
+const fetchPicturesFromServer = async() => {
+    try {
+        const res = await fetch('pictures'); 
+        if (!res.ok) throw new Error();
+        const data = await res.json();
+        populatePictures(data);
+    } catch (e) {
+        console.error('Error fetching pictures:', e);
+    }
 }
 
-// Submit follow-up question form and show returned prices
-const handleFormSubmit = (formData: {}) => {
-    fetch('submit-form', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-    })
-        .then(response => response.json())
-        .then(data => {
-            document.getElementById("fast-sell-price")!.textContent = `${data[0]} €`;
-            document.getElementById("optimum-price")!.textContent = `${data[1]} €`;
-            document.getElementById("highest-price")!.textContent = `${data[2]} €`;
-
-            const resultContainer = document.getElementById('result-container')
-            if (resultContainer) {
-                resultContainer.style.display = "flex";
-                resultContainer.scrollIntoView({ behavior: "smooth" });
-
-                setTimeout(function(){
-                    document.getElementById('form-container')!.style.display = "none";
-                }, 600);
-            }
-        })
-        .catch(e => {
-            console.error('Error:', e);
+const populatePictures = (data: Array<{ id: number, url: string }>) => {
+    const picturesDiv = document.getElementById("pictures");
+    if (picturesDiv) {
+        data.forEach(pic => {
+            const img = document.createElement("img");
+            img.src = pic.url;
+            img.addEventListener("click", onPictureSelect);
+            picturesDiv.appendChild(img);
         });
+    }
+}
+
+const onPictureSelect = (e: Event) => {
+    userSelections.picture = (e.target as HTMLImageElement).src;
+    moveToConditionSelection();
+}
+
+document.getElementById("none-of-these-button")?.addEventListener("click", () => {
+    userSelections.picture = null;
+    moveToConditionSelection();
+});
+
+const moveToConditionSelection = () => {
+    const conditionContainer = document.getElementById("condition-container");
+    const pictureContainer = document.getElementById("picture-container");
+
+    if (conditionContainer) {
+        conditionContainer.style.display = "flex";
+        conditionContainer.scrollIntoView({ behavior: 'smooth' });
+
+        setTimeout(() => {
+            if (pictureContainer) {
+                pictureContainer.style.display = "none";
+            }
+        }, 510);
+    }
+}
+
+const conditionButtons = document.querySelectorAll(".condition");
+conditionButtons.forEach(button => {
+    button.addEventListener("click", (e: Event) => {
+        userSelections.condition = (e.target as HTMLElement).getAttribute("data-value");
+        sendSelectionToServer(userSelections);
+        moveToPriceSection();
+    });
+});
+
+const moveToPriceSection = () => {
+    const resultContainer = document.getElementById('result-container');
+    const conditionContainer = document.getElementById("condition-container");
+
+    if (resultContainer) {
+        resultContainer.style.display = "flex";
+        resultContainer.scrollIntoView({ behavior: 'smooth' });
+
+        setTimeout(() => {
+            if (conditionContainer) {
+                conditionContainer.style.display = "none";
+            }
+        }, 510);
+    }
+}
+
+const sendSelectionToServer = async (data: {}) => {
+    try {
+        const res = await fetch('submit-selection', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+
+        if (!res.ok) throw new Error("Failed to fetch from server");
+
+        const prices = await res.json();
+
+        document.getElementById("fast-sell-price")!.textContent = `${prices[0]} €`;
+        document.getElementById("optimum-price")!.textContent = `${prices[1]} €`;
+        document.getElementById("highest-price")!.textContent = `${prices[2]} €`;
+    } catch (e) {
+        console.error('Error sending selection:', e);
+    }
 }
 
 const openUploadFormButton = document.getElementById('open-upload-form-button') as HTMLElement;
@@ -138,26 +176,26 @@ function closePopup() {
 
 const form = document.getElementById('upload-form') as HTMLFormElement;
 
-  form.addEventListener('submit', async (event) => {
+form.addEventListener('submit', async (event) => {
     event.preventDefault();
 
     const formData = new FormData(form);
 
     try {
-      const response = await fetch('/upload', {
-        method: 'POST',
-        body: formData,
-      });
+        const response = await fetch('/upload', {
+            method: 'POST',
+            body: formData,
+        });
 
-      if (response.ok) {
-        console.log('File uploaded successfully');
-        // You can handle the success here (e.g., show a success message).
-      } else {
-        console.error('File upload failed');
-        // You can handle the error here (e.g., show an error message).
-      }
+        if (response.ok) {
+            console.log('File uploaded successfully');
+            // You can handle the success here (e.g., show a success message).
+        } else {
+            console.error('File upload failed');
+            // You can handle the error here (e.g., show an error message).
+        }
     } catch (error) {
-      console.error('An error occurred:', error);
-      // Handle other errors as needed.
+        console.error('An error occurred:', error);
+        // Handle other errors as needed.
     }
-  });
+});
