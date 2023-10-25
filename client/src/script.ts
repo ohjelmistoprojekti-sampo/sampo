@@ -88,6 +88,7 @@ document.getElementById("none-of-these-button")?.addEventListener("click", () =>
 const moveToConditionSelection = () => {
     const conditionContainer = document.getElementById("condition-container");
     const pictureContainer = document.getElementById("picture-container");
+    const landingContainer = document.getElementById("landing-container");
 
     if (conditionContainer) {
         conditionContainer.style.display = "flex";
@@ -96,6 +97,10 @@ const moveToConditionSelection = () => {
         setTimeout(() => {
             if (pictureContainer) {
                 pictureContainer.style.display = "none";
+            }
+
+            if (landingContainer) {
+                landingContainer.style.display = "none";
             }
         }, 510);
     }
@@ -201,6 +206,7 @@ form.addEventListener('submit', async (event) => {
                 (message as HTMLSpanElement).innerText = '';
 
             closePopup();
+            moveToConditionSelection();
             // TODO: Move to the next section in the UI.
 
         } else {
