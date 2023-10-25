@@ -138,26 +138,40 @@ function closePopup() {
 
 const form = document.getElementById('upload-form') as HTMLFormElement;
 
-  form.addEventListener('submit', async (event) => {
+form.addEventListener('submit', async (event) => {
     event.preventDefault();
 
     const formData = new FormData(form);
 
     try {
-      const response = await fetch('/upload', {
-        method: 'POST',
-        body: formData,
-      });
+        const uploadButton = document.getElementById('upload-button');
+        if(uploadButton) 
+            (uploadButton as HTMLButtonElement).style.display = 'none';
 
-      if (response.ok) {
-        console.log('File uploaded successfully');
-        // You can handle the success here (e.g., show a success message).
-      } else {
-        console.error('File upload failed');
-        // You can handle the error here (e.g., show an error message).
-      }
+        const message = document.getElementById("upload-message");
+        if(message)
+            (message as HTMLSpanElement).innerText = 'Käsitellään...'
+
+        const response = await fetch('/upload', {
+            method: 'POST',
+            body: formData,
+        });
+
+        if (response.ok) {
+            if(message)
+                (message as HTMLSpanElement).innerText = '';
+
+            closePopup();
+            // TODO: Move to the next section in the UI.
+
+        } else {
+            if(message)
+                (message as HTMLSpanElement).innerText = 'Virhe ladattaessa tiedostoa';
+            
+            if(uploadButton) 
+                (uploadButton as HTMLButtonElement).style.display = 'inline';
+        }
     } catch (error) {
-      console.error('An error occurred:', error);
-      // Handle other errors as needed.
+        console.error('An error occurred:', error);
     }
-  });
+});

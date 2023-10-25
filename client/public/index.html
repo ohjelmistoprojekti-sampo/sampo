@@ -29,17 +29,18 @@
 
         <div id="upload-container">
             <p>
-                Jos et tiedä tuotteesi merkkiä tai mallia, voit ladata siitä kuvan:
+                Jos et tiedä tuotteesi merkkiä tai mallia, voit ottaa tai ladata siitä kuvan:
             </p>
             
-            <button id="open-upload-form-button">Lataa kuva</button>
+            <button id="open-upload-form-button">Lisää kuva</button>
             <div id="popup" class="popup">
                 <div class="upload-form-container">
                     <span class="close" id="close-upload-form-button">&times;</span>
                     <form id="upload-form" encType="multipart/form-data" action="/upload" method="POST">
-                        <label for="camera-input">Ota kuva:</label>
+                        <label for="photo-upload-input">Lisää kuva:</label>
                         <input type="file" id="photo-upload-input" name="photo" accept="image/*" capture="environment" required>
-                        <button type="submit">Lataa</button>
+                        <button id="upload-button" type="submit">Lataa</button>
+                        <span id="upload-message"></span>
                     </form>
                 </div>
             </div>
