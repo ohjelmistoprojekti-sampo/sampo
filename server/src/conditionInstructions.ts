@@ -1,6 +1,6 @@
 import OpenAI from "openai";
 
-async function getConditionInstructionsForItem(itemDescription: string): Promise<string | null> {
+export async function getConditionInstructionsForItem(itemDescription: string): Promise<string | null> {
     
     const openai = new OpenAI({
       apiKey: "api-key-here" // replace with api key

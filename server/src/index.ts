@@ -2,6 +2,7 @@ import express, { Express, NextFunction, Request, Response } from 'express';
 import bodyParser from 'body-parser';
 import multer from 'multer';
 import fs from 'fs';
+import { getConditionInstructionsForItem } from './conditionInstructions.js';
 
 const app: Express = express();
 const port = 3000;
@@ -21,6 +22,22 @@ app.get('/pictures', (req: Request, res: Response) => {
   ];
   res.send(pictures);
 });
+
+app.get('/condition-instructions', async (req: Request, res: Response) => {
+  const itemDescription: string | null = req.query.itemDescription as string;
+  
+  if(itemDescription === null) {
+    return res.status(400).send('Missing item description')
+  }
+  
+  try {
+    const instructions = await getConditionInstructionsForItem(itemDescription);
+    
+    return res.send(instructions);
+  } catch (err) {
+    res.status(500).send('Error getting condition instructions');
+  }
+})
 
 app.post('/submit-item-description', (req: Request, res: Response) => {
   const { description } = req.body;
