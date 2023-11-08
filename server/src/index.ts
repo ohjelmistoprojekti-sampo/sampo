@@ -2,6 +2,7 @@ import express, { Express, NextFunction, Request, Response } from 'express';
 import bodyParser from 'body-parser';
 import multer from 'multer';
 import fs from 'fs';
+import { connectToDatabase, findItems } from './dbAccess.js';
 
 const app: Express = express();
 const port = 3000;
@@ -12,6 +13,31 @@ app.use(express.json());
 
 // route to index.html
 app.use('/', express.static('client/public'))
+
+app.get('/pictures/:item', async (req: Request, res: Response) => {
+  console.log('Fetching images');
+  try {
+    const query = {
+      title: {
+        $regex: new RegExp(req.params.item, 'i'), // 'i' makes the regex case-insensitive
+      },
+    };
+
+    const foundItems = await findItems(query);
+    const images = foundItems.map((item) => {
+      return item.image;
+    });
+    console.log('Images found sending to client....')
+    res.send([
+      { id: 1, url: images[0] },
+      { id: 2, url: images[1] },
+      { id: 3, url: images[2] }
+    ]);
+  } catch (error) {
+    console.error("Error handling request:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
 
 app.get('/pictures', (req: Request, res: Response) => {
   const pictures: Array<{ id: number, url: string }> = [
@@ -42,13 +68,13 @@ const upload = multer({ dest: 'server/uploads/' });
 //handle file upload
 app.post('/upload', upload.single('photo'), (req: Request, res: Response) => {
 
-  if(req.file) {
+  if (req.file) {
     // use the file here
     console.log(req.file);
 
     // delete the file after done with it
     fs.unlink(req.file.path, (error) => {
-      if(error) {
+      if (error) {
         console.log(error);
       } else {
         console.log("File deleted.");
@@ -58,11 +84,21 @@ app.post('/upload', upload.single('photo'), (req: Request, res: Response) => {
     });
 
   } else {
-    return res.status(400).json({ error: 'File upload failed' });    
+    return res.status(400).json({ error: 'File upload failed' });
   }
-  
+
 });
 
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
-});
+(async () => {
+  try {
+    await connectToDatabase();
+    console.log("Connected to the database.");
+
+    app.listen(port, () => {
+      console.log(`Server is running on port ${port}`);
+    });
+  } catch (error) {
+    console.error("Error connecting to the database:", error);
+    process.exit(1); // Exit the application on database connection error
+  }
+})();

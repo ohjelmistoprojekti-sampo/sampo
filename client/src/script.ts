@@ -11,7 +11,7 @@ const moveToPictureSelection = async () => {
         const description = itemDescriptionInput.value;
         await sendItemDescriptionToServer(description);
     }
-    
+
     const pictureContainer = document.getElementById("picture-container");
     const landingContainer = document.getElementById("landing-container");
 
@@ -49,15 +49,23 @@ if (itemDescriptionForm) {
     itemDescriptionForm.addEventListener('submit', function (e) {
         e.preventDefault();
         moveToPictureSelection();
+        fetchPicturesFromServer();
     });
 }
 
-const fetchPicturesFromServer = async() => {
+const fetchPicturesFromServer = async () => {
     try {
-        const res = await fetch('pictures'); 
-        if (!res.ok) throw new Error();
-        const data = await res.json();
-        populatePictures(data);
+        const itemDescriptionInput = document.getElementById("item-description") as HTMLInputElement;
+
+        if (itemDescriptionInput) {
+            const description = itemDescriptionInput.value;
+
+            const res = await fetch(`pictures/${description}`);
+            if (!res.ok) throw new Error();
+            const data = await res.json();
+            populatePictures(data);
+        }
+
     } catch (e) {
         console.error('Error fetching pictures:', e);
     }
@@ -66,6 +74,7 @@ const fetchPicturesFromServer = async() => {
 const populatePictures = (data: Array<{ id: number, url: string }>) => {
     const picturesDiv = document.getElementById("pictures");
     if (picturesDiv) {
+        console.log('div found')
         data.forEach(pic => {
             const img = document.createElement("img");
             img.src = pic.url;
@@ -184,11 +193,11 @@ form.addEventListener('submit', async (event) => {
     try {
 
         const uploadButton = document.getElementById('upload-button');
-        if(uploadButton) 
+        if (uploadButton)
             (uploadButton as HTMLButtonElement).style.display = 'none';
 
         const message = document.getElementById("upload-message");
-        if(message)
+        if (message)
             (message as HTMLSpanElement).innerText = 'Käsitellään...'
 
         const response = await fetch('/upload', {
@@ -197,17 +206,17 @@ form.addEventListener('submit', async (event) => {
         });
 
         if (response.ok) {
-            if(message)
+            if (message)
                 (message as HTMLSpanElement).innerText = '';
 
             closePopup();
             // TODO: Move to the next section in the UI.
 
         } else {
-            if(message)
+            if (message)
                 (message as HTMLSpanElement).innerText = 'Virhe ladattaessa tiedostoa';
-            
-            if(uploadButton) 
+
+            if (uploadButton)
                 (uploadButton as HTMLButtonElement).style.display = 'inline';
         }
     } catch (error) {
