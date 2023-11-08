@@ -3,3 +3,4 @@ dist/
 client/public/*.js
 client/public/*.js.map
 package-lock.json
+.env
