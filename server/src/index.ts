@@ -48,24 +48,33 @@ app.get('/pictures', (req: Request, res: Response) => {
   res.send(pictures);
 });
 
+// submit item description
 app.post('/submit-item-description', (req: Request, res: Response) => {
   const { description } = req.body;
   console.log(`Received Item Description: ${description}`);
   res.status(200).send({ message: 'Description received successfully' });
 });
 
-app.post('/submit-selection', (req: Request, res: Response) => {
-  const { picture, condition } = req.body;
-  console.log(`Selected Picture: ${picture}`);
-  console.log(`Selected Condition: ${condition}`);
-  const prices: number[] = [10, 20, 30];
-  res.send(prices);
+// get prices from price-estimation-service
+app.post('/submit-selection', async (req: Request, res: Response) => {
+  const { description, condition } = req.body;
+  
+  try {
+    const priceEstimationServiceResponse = await fetch(`http://localhost:8000/estimate-price?item_description=${description}&condition=${condition}`);
+    if (!priceEstimationServiceResponse.ok) throw new Error('Failed to fetch from price-estimation-service');
+
+    const prices = await priceEstimationServiceResponse.json();
+    res.send(prices);
+  } catch (e) {
+    console.error('Error fetching from price-estimation-service:', e);
+    res.status(500).send('Error fetching from price-estimation-service');
+  }
 });
 
 // path for uploaded image files
 const upload = multer({ dest: 'server/uploads/' });
 
-//handle file upload
+// handle file upload
 app.post('/upload', upload.single('photo'), (req: Request, res: Response) => {
 
   if (req.file) {
@@ -88,7 +97,7 @@ app.post('/upload', upload.single('photo'), (req: Request, res: Response) => {
   }
 
 });
-
+// database
 (async () => {
   try {
     await connectToDatabase();

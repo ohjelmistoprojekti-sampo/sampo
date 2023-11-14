@@ -1,14 +1,16 @@
 let userSelections = {
     picture: null as string | null,
-    condition: null as string | null
+    condition: null as string | null,
+    description: null as string | null
 };
 
-
+// moving to picture-section
 const moveToPictureSelection = async () => {
     // Capture the item description input and send to server
     const itemDescriptionInput = document.getElementById("item-description") as HTMLInputElement;
     if (itemDescriptionInput) {
         const description = itemDescriptionInput.value;
+        userSelections.description = description;
         await sendItemDescriptionToServer(description);
     }
 
@@ -27,6 +29,7 @@ const moveToPictureSelection = async () => {
     }
 }
 
+// sending description
 const sendItemDescriptionToServer = async (description: string) => {
     try {
         const res = await fetch('submit-item-description', {
@@ -53,6 +56,7 @@ if (itemDescriptionForm) {
     });
 }
 
+// fetching pictures
 const fetchPicturesFromServer = async () => {
     try {
         const itemDescriptionInput = document.getElementById("item-description") as HTMLInputElement;
@@ -71,6 +75,7 @@ const fetchPicturesFromServer = async () => {
     }
 }
 
+// populating pictures
 const populatePictures = (data: Array<{ id: number, url: string }>) => {
     const picturesDiv = document.getElementById("pictures");
     if (picturesDiv) {
@@ -84,16 +89,19 @@ const populatePictures = (data: Array<{ id: number, url: string }>) => {
     }
 }
 
+// selection of picture
 const onPictureSelect = (e: Event) => {
     userSelections.picture = (e.target as HTMLImageElement).src;
     moveToConditionSelection();
 }
 
+// selection of none-of-these
 document.getElementById("none-of-these-button")?.addEventListener("click", () => {
     userSelections.picture = null;
     moveToConditionSelection();
 });
 
+// moving to condition-section
 const moveToConditionSelection = () => {
     const conditionContainer = document.getElementById("condition-container");
     const pictureContainer = document.getElementById("picture-container");
@@ -110,6 +118,7 @@ const moveToConditionSelection = () => {
     }
 }
 
+// condition buttons
 const conditionButtons = document.querySelectorAll(".condition");
 conditionButtons.forEach(button => {
     button.addEventListener("click", (e: Event) => {
@@ -119,6 +128,7 @@ conditionButtons.forEach(button => {
     });
 });
 
+// moving to price-section
 const moveToPriceSection = () => {
     const resultContainer = document.getElementById('result-container');
     const conditionContainer = document.getElementById("condition-container");
@@ -135,9 +145,10 @@ const moveToPriceSection = () => {
     }
 }
 
-const sendSelectionToServer = async (data: {}) => {
+// getting prices from price-estimation-service and setting them
+const sendSelectionToServer = async (data: { description: string | null, condition: string | null }) => {
     try {
-        const res = await fetch('submit-selection', {
+        const res = await fetch('/submit-selection', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
@@ -147,9 +158,9 @@ const sendSelectionToServer = async (data: {}) => {
 
         const prices = await res.json();
 
-        document.getElementById("fast-sell-price")!.textContent = `${prices[0]} €`;
-        document.getElementById("optimum-price")!.textContent = `${prices[1]} €`;
-        document.getElementById("highest-price")!.textContent = `${prices[2]} €`;
+        document.getElementById("fast-sell-price")!.textContent = `${prices.fastSellPrice} €`;
+        document.getElementById("optimum-price")!.textContent = `${prices.optimumPrice} €`;
+        document.getElementById("highest-price")!.textContent = `${prices.highestPrice} €`;
     } catch (e) {
         console.error('Error sending selection:', e);
     }
