@@ -60,11 +60,14 @@ app.post('/submit-selection', async (req: Request, res: Response) => {
   const { description, condition } = req.body;
   
   try {
-    const priceEstimationServiceResponse = await fetch(`http://localhost:8000/estimate-price?item_description=${description}&condition=${condition}`);
+    const priceEstimationServiceResponse = await fetch(`https://sampo-pe.rahtiapp.fi/estimate-price?item_description=${description}&condition=${condition}`);
     if (!priceEstimationServiceResponse.ok) throw new Error('Failed to fetch from price-estimation-service');
 
-    const prices = await priceEstimationServiceResponse.json();
-    res.send(prices);
+    const responseData = await priceEstimationServiceResponse.json();
+    const prices = responseData.estimated_price;
+    console.log(prices);
+
+    res.send({prices});
   } catch (e) {
     console.error('Error fetching from price-estimation-service:', e);
     res.status(500).send('Error fetching from price-estimation-service');

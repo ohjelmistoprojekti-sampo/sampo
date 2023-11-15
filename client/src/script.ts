@@ -157,10 +157,10 @@ const sendSelectionToServer = async (data: { description: string | null, conditi
         if (!res.ok) throw new Error("Failed to fetch from server");
 
         const prices = await res.json();
-
-        document.getElementById("fast-sell-price")!.textContent = `${prices.fastSellPrice} €`;
-        document.getElementById("optimum-price")!.textContent = `${prices.optimumPrice} €`;
-        document.getElementById("highest-price")!.textContent = `${prices.highestPrice} €`;
+        console.log(prices);
+        document.getElementById("fast-sell-price")!.textContent = `${Math.round(parseInt(prices.prices)*0.7)} €`;
+        document.getElementById("optimum-price")!.textContent = `${prices.prices} €`;
+        document.getElementById("highest-price")!.textContent = `${Math.round(parseInt(prices.prices)*1.2)} €`;
     } catch (e) {
         console.error('Error sending selection:', e);
     }
