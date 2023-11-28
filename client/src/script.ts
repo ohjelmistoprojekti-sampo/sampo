@@ -1,11 +1,10 @@
 let userSelections = {
-    picture: null as string | null,
     condition: null as string | null,
     description: null as string | null
 };
 
-// moving to picture-section
-const moveToPictureSelection = async () => {
+// Moving to picture-section
+const moveToConditionSelection = async () => {
     // Capture the item description input and send to server
     const itemDescriptionInput = document.getElementById("item-description") as HTMLInputElement;
     if (itemDescriptionInput) {
@@ -14,12 +13,12 @@ const moveToPictureSelection = async () => {
         await sendItemDescriptionToServer(description);
     }
 
-    const pictureContainer = document.getElementById("picture-container");
+    const conditionContainer = document.getElementById("condition-container");
     const landingContainer = document.getElementById("landing-container");
 
-    if (pictureContainer) {
-        pictureContainer.style.display = "flex";
-        pictureContainer.scrollIntoView({ behavior: 'smooth' });
+    if (conditionContainer) {
+        conditionContainer.style.display = "flex";
+        conditionContainer.scrollIntoView({ behavior: 'smooth' });
 
         setTimeout(() => {
             if (landingContainer) {
@@ -29,7 +28,7 @@ const moveToPictureSelection = async () => {
     }
 }
 
-// sending description
+// Sending description
 const sendItemDescriptionToServer = async (description: string) => {
     try {
         const res = await fetch('submit-item-description', {
@@ -45,80 +44,17 @@ const sendItemDescriptionToServer = async (description: string) => {
     }
 }
 
-// Prevent default form submit and call moveToPictureSelection() instead
+// Prevent default form submit and call moveToConditionSelection() instead
 const itemDescriptionForm = document.getElementById("item-description-form");
 
 if (itemDescriptionForm) {
     itemDescriptionForm.addEventListener('submit', function (e) {
         e.preventDefault();
-        moveToPictureSelection();
-        fetchPicturesFromServer();
+        moveToConditionSelection();
     });
 }
 
-// fetching pictures
-const fetchPicturesFromServer = async () => {
-    try {
-        const itemDescriptionInput = document.getElementById("item-description") as HTMLInputElement;
-
-        if (itemDescriptionInput) {
-            const description = itemDescriptionInput.value;
-
-            const res = await fetch(`pictures/${description}`);
-            if (!res.ok) throw new Error();
-            const data = await res.json();
-            populatePictures(data);
-        }
-
-    } catch (e) {
-        console.error('Error fetching pictures:', e);
-    }
-}
-
-// populating pictures
-const populatePictures = (data: Array<{ id: number, url: string }>) => {
-    const picturesDiv = document.getElementById("pictures");
-    if (picturesDiv) {
-        console.log('div found')
-        data.forEach(pic => {
-            const img = document.createElement("img");
-            img.src = pic.url;
-            img.addEventListener("click", onPictureSelect);
-            picturesDiv.appendChild(img);
-        });
-    }
-}
-
-// selection of picture
-const onPictureSelect = (e: Event) => {
-    userSelections.picture = (e.target as HTMLImageElement).src;
-    moveToConditionSelection();
-}
-
-// selection of none-of-these
-document.getElementById("none-of-these-button")?.addEventListener("click", () => {
-    userSelections.picture = null;
-    moveToConditionSelection();
-});
-
-// moving to condition-section
-const moveToConditionSelection = () => {
-    const conditionContainer = document.getElementById("condition-container");
-    const pictureContainer = document.getElementById("picture-container");
-
-    if (conditionContainer) {
-        conditionContainer.style.display = "flex";
-        conditionContainer.scrollIntoView({ behavior: 'smooth' });
-
-        setTimeout(() => {
-            if (pictureContainer) {
-                pictureContainer.style.display = "none";
-            }
-        }, 510);
-    }
-}
-
-// condition buttons
+// Condition buttons
 const conditionButtons = document.querySelectorAll(".condition");
 conditionButtons.forEach(button => {
     button.addEventListener("click", (e: Event) => {
@@ -128,7 +64,7 @@ conditionButtons.forEach(button => {
     });
 });
 
-// moving to price-section
+// Moving to price-section
 const moveToPriceSection = () => {
     const resultContainer = document.getElementById('result-container');
     const conditionContainer = document.getElementById("condition-container");
@@ -145,7 +81,7 @@ const moveToPriceSection = () => {
     }
 }
 
-// getting prices from price-estimation-service and setting them
+// Getting prices from price-estimation-service and setting them
 const sendSelectionToServer = async (data: { description: string | null, condition: string | null }) => {
     try {
         const res = await fetch('/submit-selection', {
@@ -166,6 +102,7 @@ const sendSelectionToServer = async (data: { description: string | null, conditi
     }
 }
 
+// Picture-upload related buttons
 const openUploadFormButton = document.getElementById('open-upload-form-button') as HTMLElement;
 const closeUploadFormButton = document.getElementById('close-upload-form-button') as HTMLElement;
 const popup = document.getElementById("popup") as HTMLElement;
