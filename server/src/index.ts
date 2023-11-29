@@ -26,7 +26,7 @@ app.post('/submit-selection', async (req: Request, res: Response) => {
   const { description, condition } = req.body;
   
   try {
-    const priceEstimationServiceResponse = await fetch(`http://http://sampo-pe:8000/estimate-price?item_description=${description}&condition=${condition}`);
+    const priceEstimationServiceResponse = await fetch(`http://sampo-pe:8000/estimate-price?item_description=${description}&condition=${condition}`);
     if (!priceEstimationServiceResponse.ok) throw new Error('Failed to fetch from price-estimation-service');
 
     const responseData = await priceEstimationServiceResponse.json();
