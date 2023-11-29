@@ -1,23 +1,24 @@
 let userSelections = {
-    picture: null as string | null,
-    condition: null as string | null
+    condition: null as string | null,
+    description: null as string | null
 };
 
-
-const moveToPictureSelection = async () => {
+// Moving to picture-section
+const moveToConditionSelection = async () => {
     // Capture the item description input and send to server
     const itemDescriptionInput = document.getElementById("item-description") as HTMLInputElement;
     if (itemDescriptionInput) {
         const description = itemDescriptionInput.value;
+        userSelections.description = description;
         await sendItemDescriptionToServer(description);
     }
-    
-    const pictureContainer = document.getElementById("picture-container");
+
+    const conditionContainer = document.getElementById("condition-container");
     const landingContainer = document.getElementById("landing-container");
 
-    if (pictureContainer) {
-        pictureContainer.style.display = "flex";
-        pictureContainer.scrollIntoView({ behavior: 'smooth' });
+    if (conditionContainer) {
+        conditionContainer.style.display = "flex";
+        conditionContainer.scrollIntoView({ behavior: 'smooth' });
 
         setTimeout(() => {
             if (landingContainer) {
@@ -27,6 +28,7 @@ const moveToPictureSelection = async () => {
     }
 }
 
+// Sending description
 const sendItemDescriptionToServer = async (description: string) => {
     try {
         const res = await fetch('submit-item-description', {
@@ -42,68 +44,14 @@ const sendItemDescriptionToServer = async (description: string) => {
     }
 }
 
-// Prevent default form submit and call moveToPictureSelection() instead
+// Prevent default form submit and call moveToConditionSelection() instead
 const itemDescriptionForm = document.getElementById("item-description-form");
 
 if (itemDescriptionForm) {
     itemDescriptionForm.addEventListener('submit', function (e) {
         e.preventDefault();
-        moveToPictureSelection();
+        moveToConditionSelection();
     });
-}
-
-const fetchPicturesFromServer = async() => {
-    try {
-        const res = await fetch('pictures'); 
-        if (!res.ok) throw new Error();
-        const data = await res.json();
-        populatePictures(data);
-    } catch (e) {
-        console.error('Error fetching pictures:', e);
-    }
-}
-
-const populatePictures = (data: Array<{ id: number, url: string }>) => {
-    const picturesDiv = document.getElementById("pictures");
-    if (picturesDiv) {
-        data.forEach(pic => {
-            const img = document.createElement("img");
-            img.src = pic.url;
-            img.addEventListener("click", onPictureSelect);
-            picturesDiv.appendChild(img);
-        });
-    }
-}
-
-const onPictureSelect = (e: Event) => {
-    userSelections.picture = (e.target as HTMLImageElement).src;
-    moveToConditionSelection();
-}
-
-document.getElementById("none-of-these-button")?.addEventListener("click", () => {
-    userSelections.picture = null;
-    moveToConditionSelection();
-});
-
-const moveToConditionSelection = () => {
-    const conditionContainer = document.getElementById("condition-container");
-    const pictureContainer = document.getElementById("picture-container");
-    const landingContainer = document.getElementById("landing-container");
-
-    if (conditionContainer) {
-        conditionContainer.style.display = "flex";
-        conditionContainer.scrollIntoView({ behavior: 'smooth' });
-
-        setTimeout(() => {
-            if (pictureContainer) {
-                pictureContainer.style.display = "none";
-            }
-
-            if (landingContainer) {
-                landingContainer.style.display = "none";
-            }
-        }, 510);
-    }
 }
 
 const conditionButtons = document.querySelectorAll(".condition");
@@ -115,6 +63,7 @@ conditionButtons.forEach(button => {
     });
 });
 
+// Moving to price-section
 const moveToPriceSection = () => {
     const resultContainer = document.getElementById('result-container');
     const conditionContainer = document.getElementById("condition-container");
@@ -131,9 +80,10 @@ const moveToPriceSection = () => {
     }
 }
 
-const sendSelectionToServer = async (data: {}) => {
+// Getting prices from price-estimation-service and setting them
+const sendSelectionToServer = async (data: { description: string | null, condition: string | null }) => {
     try {
-        const res = await fetch('submit-selection', {
+        const res = await fetch('/submit-selection', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
@@ -142,15 +92,16 @@ const sendSelectionToServer = async (data: {}) => {
         if (!res.ok) throw new Error("Failed to fetch from server");
 
         const prices = await res.json();
-
-        document.getElementById("fast-sell-price")!.textContent = `${prices[0]} €`;
-        document.getElementById("optimum-price")!.textContent = `${prices[1]} €`;
-        document.getElementById("highest-price")!.textContent = `${prices[2]} €`;
+        console.log(prices);
+        document.getElementById("fast-sell-price")!.textContent = `${Math.round(parseInt(prices.prices)*0.7)} €`;
+        document.getElementById("optimum-price")!.textContent = `${prices.prices} €`;
+        document.getElementById("highest-price")!.textContent = `${Math.round(parseInt(prices.prices)*1.2)} €`;
     } catch (e) {
         console.error('Error sending selection:', e);
     }
 }
 
+// Picture-upload related buttons
 const openUploadFormButton = document.getElementById('open-upload-form-button') as HTMLElement;
 const closeUploadFormButton = document.getElementById('close-upload-form-button') as HTMLElement;
 const popup = document.getElementById("popup") as HTMLElement;
@@ -189,11 +140,11 @@ form.addEventListener('submit', async (event) => {
     try {
 
         const uploadButton = document.getElementById('upload-button');
-        if(uploadButton) 
+        if (uploadButton)
             (uploadButton as HTMLButtonElement).style.display = 'none';
 
         const message = document.getElementById("upload-message");
-        if(message)
+        if (message)
             (message as HTMLSpanElement).innerText = 'Käsitellään...'
 
         const response = await fetch('/upload', {
@@ -202,7 +153,7 @@ form.addEventListener('submit', async (event) => {
         });
 
         if (response.ok) {
-            if(message)
+            if (message)
                 (message as HTMLSpanElement).innerText = '';
 
             closePopup();
@@ -210,10 +161,10 @@ form.addEventListener('submit', async (event) => {
             // TODO: Move to the next section in the UI.
 
         } else {
-            if(message)
+            if (message)
                 (message as HTMLSpanElement).innerText = 'Virhe ladattaessa tiedostoa';
-            
-            if(uploadButton) 
+
+            if (uploadButton)
                 (uploadButton as HTMLButtonElement).style.display = 'inline';
         }
     } catch (error) {
