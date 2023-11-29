@@ -54,7 +54,6 @@ if (itemDescriptionForm) {
     });
 }
 
-// Condition buttons
 const conditionButtons = document.querySelectorAll(".condition");
 conditionButtons.forEach(button => {
     button.addEventListener("click", (e: Event) => {
@@ -158,6 +157,7 @@ form.addEventListener('submit', async (event) => {
                 (message as HTMLSpanElement).innerText = '';
 
             closePopup();
+            moveToConditionSelection();
             // TODO: Move to the next section in the UI.
 
         } else {
