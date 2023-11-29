@@ -5,7 +5,7 @@ import fs from 'fs';
 import { connectToDatabase, findItems } from './dbAccess.js';
 
 const app: Express = express();
-const port = 3000;
+const port = 5000;
 
 // Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
