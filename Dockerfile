@@ -13,6 +13,7 @@ COPY . .
 
 # set permissions for saving files in deployment
 # Note: Not the most secure way currently, should be improved.
+RUN mkdir -p server/uploads
 RUN chmod 777 server/uploads
 
 RUN npm run build
