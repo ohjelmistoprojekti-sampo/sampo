@@ -1,9 +1,10 @@
+// User selection parameters
 let userSelections = {
     condition: null as string | null,
     description: null as string | null
 };
 
-// Moving to picture-section
+// Moving to condition-section
 const moveToConditionSelection = async () => {
     // Capture the item description input and send to server
     const itemDescriptionInput = document.getElementById("item-description") as HTMLInputElement;
@@ -54,6 +55,7 @@ if (itemDescriptionForm) {
     });
 }
 
+// Save condition choice and move to price-section
 const conditionButtons = document.querySelectorAll(".condition");
 conditionButtons.forEach(button => {
     button.addEventListener("click", (e: Event) => {
@@ -80,7 +82,18 @@ const moveToPriceSection = () => {
     }
 }
 
-// Getting prices from price-estimation-service and setting them
+// Error popup html element creation
+const showErrorPopup = (message: string) => {
+    const resultContainer = document.getElementById('result-container');
+    if (resultContainer) {
+      resultContainer.innerHTML = `<div class="section error">
+                                      <p>${message}</p>
+                                      <a href="/">Tee uusi hinta-arvio</a>
+                                   </div>`;
+    }
+  }  
+  
+// Sending & receiving user data, displaying dataset results and handling error popup
 const sendSelectionToServer = async (data: { description: string | null, condition: string | null }) => {
     try {
         const res = await fetch('/submit-selection', {
@@ -92,16 +105,24 @@ const sendSelectionToServer = async (data: { description: string | null, conditi
         if (!res.ok) throw new Error("Failed to fetch from server");
 
         const prices = await res.json();
-        console.log(prices);
-        document.getElementById("fast-sell-price")!.textContent = `${Math.round(parseInt(prices.prices)*0.7)} €`;
-        document.getElementById("optimum-price")!.textContent = `${prices.prices} €`;
-        document.getElementById("highest-price")!.textContent = `${Math.round(parseInt(prices.prices)*1.2)} €`;
+        // Handle error popup
+        if (!prices || typeof prices.estimated_price !== 'number' || typeof prices.min_price !== 'number' || typeof prices.max_price !== 'number') {
+            showErrorPopup('Oho! Hinta-arvio epäonnistui. Ota yhteyttä ylläpitoon. Voit myös aloittaa alusta ja kokeilla eri hakusanaa!');
+            return;
+        }
+
+        // Display prices
+        document.getElementById("fast-sell-price")!.textContent = `${prices.min_price} €`;
+        document.getElementById("optimum-price")!.textContent = `${prices.estimated_price} €`;
+        document.getElementById("highest-price")!.textContent = `${prices.max_price} €`;
     } catch (e) {
         console.error('Error sending selection:', e);
+        // Handle error popup
+        showErrorPopup('Oho! Hinta-arvio epäonnistui. Ota yhteyttä ylläpitoon. Voit myös aloittaa alusta ja kokeilla eri hakusanaa!');
     }
 }
 
-// Picture-upload related buttons
+// Picture upload related buttons
 const openUploadFormButton = document.getElementById('open-upload-form-button') as HTMLElement;
 const closeUploadFormButton = document.getElementById('close-upload-form-button') as HTMLElement;
 const popup = document.getElementById("popup") as HTMLElement;
@@ -132,6 +153,7 @@ function closePopup() {
 
 const form = document.getElementById('upload-form') as HTMLFormElement;
 
+// Picture upload handling
 form.addEventListener('submit', async (event) => {
     event.preventDefault();
 
@@ -158,7 +180,6 @@ form.addEventListener('submit', async (event) => {
 
             closePopup();
             moveToConditionSelection();
-            // TODO: Move to the next section in the UI.
 
         } else {
             if (message)
