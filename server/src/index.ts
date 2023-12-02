@@ -1,8 +1,8 @@
-import express, { Express, NextFunction, Request, Response } from 'express';
+import express, { Express, Request, Response } from 'express';
 import bodyParser from 'body-parser';
 import multer from 'multer';
 import fs from 'fs';
-import { connectToDatabase, findItems } from './dbAccess.js';
+import { connectToDatabase } from './dbAccess.js';
 
 const app: Express = express();
 const port = 5000;
@@ -26,14 +26,17 @@ app.post('/submit-selection', async (req: Request, res: Response) => {
   const { description, condition } = req.body;
   
   try {
-    const priceEstimationServiceResponse = await fetch(`http://sampo-pe:8000/estimate-price?item_description=${description}&condition=${condition}`);
+    const priceEstimationServiceResponse = await fetch(`https://sampo-pe.rahtiapp.fi/estimate-price?item_description=${description}&condition=${condition}`);
     if (!priceEstimationServiceResponse.ok) throw new Error('Failed to fetch from price-estimation-service');
 
-    const responseData = await priceEstimationServiceResponse.json();
-    const prices = responseData.estimated_price;
-    console.log(prices);
+    const prices = await priceEstimationServiceResponse.json();
+    // Data error check
+    if (typeof prices.min_price !== 'number' || typeof prices.estimated_price !== 'number' || typeof prices.max_price !== 'number') {
+      throw new Error('Invalid price data received');
+    }
 
-    res.send({prices});
+    // Send all price values
+    res.send(prices);
   } catch (e) {
     console.error('Error fetching from price-estimation-service:', e);
     res.status(500).send('Error fetching from price-estimation-service');
@@ -77,6 +80,7 @@ app.post('/upload', upload.single('photo'), (req: Request, res: Response) => {
     });
   } catch (error) {
     console.error("Error connecting to the database:", error);
-    process.exit(1); // Exit the application on database connection error
+    // Exit the application on database connection error
+    process.exit(1);
   }
 })();

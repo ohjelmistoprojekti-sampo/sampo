@@ -1,3 +1,4 @@
+/* General */
 body, html {
     margin: 0;
     padding: 0;
@@ -15,6 +16,7 @@ form {
     text-align: center; /* Center the text */
     background-color: #fff;
     max-width: 500px;
+    font-size: 18px;
 }
 
 label, input, button {
@@ -31,6 +33,7 @@ button {
     cursor: pointer; /* Change cursor to pointer on hover */
     max-width: 100px;
     height: 35px;
+    font-size: 16px;
 }
 
 button:hover {
@@ -38,23 +41,28 @@ button:hover {
 }
 
 /* Heading and Paragraph Styles */
-h1, p {
+h1, p, h2 {
     margin: 10px 0; /* Add some margin */
     color: #333; /* Dark text color for contrast */
 }
 
 h1 {
-    font-size: 2em; /* Make the heading larger */
+    font-size: 40px;
+}
+
+h2 {
+    font-size: 40px;
 }
 
 p {
-    font-size: 1em; /* Regular font size for paragraph */
+    font-size: 18px;
     width: 80%; /* Control the width of the paragraph */
     margin: 0 auto; /* Center the paragraph */
     margin-bottom: 30px;
     max-width: 500px;
 }
 
+/* section */
 .section {
     height: 100%;
     display: flex;
@@ -63,6 +71,7 @@ p {
     justify-content: center;
 }
 
+/* result-container */
 #result-container {
     min-height: 800px; /* ensure that last section doesn't overflow to previous sections */
 }
@@ -107,7 +116,7 @@ p {
     color: #333; 
 }
 
-/* if screen does't fit 3 cards side by side show them in a column */
+/* If screen does't fit 3 cards side by side show them in a column */
 @media screen and (max-width: 1000px) {
     #price-card-container {
         flex-direction: column;
@@ -116,6 +125,7 @@ p {
     }
 }
 
+/* Upload */
 #upload-container {
     margin: 20px;
     display: flex;
@@ -165,4 +175,51 @@ p {
     top: 10px;
     right: 10px;
     cursor: pointer;
+}
+
+/* Style for condition button 5 */
+.condition[data-value="5"] {
+    background-color: #4CAF50;
+    color: white;
+    font-size: 16px;
+}
+
+/* Style for condition button 4 */
+.condition[data-value="4"] {
+    background-color: #008080;
+    color: white;
+    font-size: 16px;
+}
+
+/* Style for condition button 3 */
+.condition[data-value="3"] {
+    background-color: #2b7ec2;
+    color: white;
+    font-size: 16px;
+}
+
+/* Style for condition button 2 */
+.condition[data-value="2"] {
+    background-color: #c0930c;
+    color: white;
+    font-size: 16px;
+}
+
+/* Style for condition button 1 */
+.condition[data-value="1"] {
+    background-color: #bb3127;
+    color: white;
+    font-size: 16px;
+}
+
+/* Style for error-popup */
+.error {
+    padding: 20px;
+    border-radius: 5%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Same box shadow as price card */
+    width: 80%;
+    height: 15%;
+    text-align: center;
+    background-color: #fff;
+    max-width: 500px;
 }
