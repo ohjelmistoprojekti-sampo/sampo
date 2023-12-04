@@ -7,6 +7,7 @@ import { connectToDatabase } from './dbAccess.js';
 
 const app: Express = express();
 const port = 5000;
+const apiKey = process.env.API_KEY;
 
 // Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -60,14 +61,12 @@ app.post('/upload', upload.single('photo'), async (req: Request, res: Response) 
 
     // Send base64 image to Vision API
     try {
-      const visionApiUrl = 'https://vision.googleapis.com/v1/images:annotate?key=AIzaSyBrnfIhUUhR7wumNYJU4kQ2lzDdnBt0ovs'; // Replace with your API key
+      const visionApiUrl = `https://vision.googleapis.com/v1/images:annotate?key=${apiKey}`; 
       const requestData = {
         requests: [
           {
             image: {
-              source: {
-                imageUri: base64Image, // Adding data URL prefix
-              },
+                content: base64Image, // Adding data URL prefix
             },
             features: [
               {
@@ -84,6 +83,14 @@ app.post('/upload', upload.single('photo'), async (req: Request, res: Response) 
       const name = recognizedObject?.name;
       console.log('Recognized Item:', name);
 
+       // Translate the item name to Finnish
+       const translationResponse = await axios.get(
+        `https://translation.googleapis.com/language/translate/v2?key=${apiKey}&q=${name}&target=fi`
+      );
+      const translatedName = translationResponse.data.data.translations[0].translatedText;
+
+      console.log('Translated Item:', translatedName);
+
       // Delete the file after done with it
       fs.unlink(filePath, (error) => {
         if (error) {
@@ -92,7 +99,7 @@ app.post('/upload', upload.single('photo'), async (req: Request, res: Response) 
           console.log('File deleted.');
         }
 
-        res.status(200).json({ message: 'File uploaded successfully', recognizedItem: name });
+        res.status(200).json({ message: 'File uploaded successfully', info: translatedName });
       });
     } catch (error: any) {
       console.error('Error making Vision API request:', error);

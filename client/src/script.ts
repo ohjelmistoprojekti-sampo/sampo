@@ -179,6 +179,17 @@ form.addEventListener('submit', async (event) => {
                 (message as HTMLSpanElement).innerText = '';
 
             closePopup();
+            
+            response.json()
+            .then(data => {
+                let item_description = data.info;
+                userSelections.description = item_description;
+
+            })
+            
+            
+
+
             moveToConditionSelection();
 
         } else {
