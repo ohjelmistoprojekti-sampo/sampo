@@ -2,6 +2,7 @@ import express, { Express, Request, Response } from 'express';
 import bodyParser from 'body-parser';
 import multer from 'multer';
 import fs from 'fs';
+import axios from 'axios'
 import { connectToDatabase } from './dbAccess.js';
 
 const app: Express = express();
@@ -47,27 +48,60 @@ app.post('/submit-selection', async (req: Request, res: Response) => {
 const upload = multer({ dest: 'server/uploads/' });
 
 // Handle file upload
-app.post('/upload', upload.single('photo'), (req: Request, res: Response) => {
-
+app.post('/upload', upload.single('photo'), async (req: Request, res: Response) => {
   if (req.file) {
     // Use the file here
-    console.log(req.file);
+    const filePath = req.file.path;
 
-    // Delete the file after done with it
-    fs.unlink(req.file.path, (error) => {
-      if (error) {
-        console.log(error);
-      } else {
-        console.log("File deleted.");
-      }
+    // Convert the file to base64
+    const base64Image = convertToBase64(filePath);
 
-      res.status(200).json({ message: 'File uploaded successfully' });
-    });
+    console.log('Base64 image:', base64Image);
 
+    // Send base64 image to Vision API
+    try {
+      const visionApiUrl = 'https://vision.googleapis.com/v1/images:annotate?key=AIzaSyBrnfIhUUhR7wumNYJU4kQ2lzDdnBt0ovs'; // Replace with your API key
+      const requestData = {
+        requests: [
+          {
+            image: {
+              source: {
+                imageUri: base64Image, // Adding data URL prefix
+              },
+            },
+            features: [
+              {
+                type: 'OBJECT_LOCALIZATION',
+                maxResults: 1,
+              },
+            ],
+          },
+        ],
+      };
+
+      const response = await axios.post(visionApiUrl, requestData);
+      const recognizedObject = response.data.responses[0]?.localizedObjectAnnotations[0];
+      const name = recognizedObject?.name;
+      console.log('Recognized Item:', name);
+
+      // Delete the file after done with it
+      fs.unlink(filePath, (error) => {
+        if (error) {
+          console.log(error);
+        } else {
+          console.log('File deleted.');
+        }
+
+        res.status(200).json({ message: 'File uploaded successfully', recognizedItem: name });
+      });
+    } catch (error: any) {
+      console.error('Error making Vision API request:', error);
+      console.error('Response data:', (error as any).response?.data);
+      res.status(500).json({ error: 'Error making Vision API request' });
+    }
   } else {
     return res.status(400).json({ error: 'File upload failed' });
   }
-
 });
 // Database
 (async () => {
@@ -84,3 +118,15 @@ app.post('/upload', upload.single('photo'), (req: Request, res: Response) => {
     process.exit(1);
   }
 })();
+
+// Function to convert a file to base64
+function convertToBase64(filePath: string): string | null {
+  try {
+    const fileData = fs.readFileSync(filePath);
+    const base64Image = Buffer.from(fileData).toString('base64');
+    return base64Image;
+  } catch (error) {
+    console.error('Error converting file to base64:', error);
+    return null;
+  }
+}
